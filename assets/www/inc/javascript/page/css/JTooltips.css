@@ -1,0 +1,29 @@
+.perGirl{
+  z-index:5;
+  filter: Alpha(Opacity=90);
+  opacity:0.9;
+  overflow:hidden;
+  background:#333333;
+  color:#fff;
+  border:1px gray solid;
+  text-align:center;
+  padding:15px;
+  font-weight:bold;
+}
+.perGirl img{
+  text-align:center;
+}
+.perGirl p{    
+  text-align:center;
+}
+
+
+
+
+
+
+
+
+
+
+

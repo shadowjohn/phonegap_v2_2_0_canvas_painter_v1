@@ -1,0 +1,71 @@
+.MainBook{
+  /*background:#fff;*/
+  width:800px;
+  border:1px solid #fff;
+  padding:15px;  
+}
+.CenterBook{
+  margin:0 auto;
+}
+.MagMain{
+  height:520px;
+  margin-left:25px;
+  
+}
+.ContralBook{
+  position:relative;
+  z-index:3;
+  text-align:center;  
+  overflow:visible;
+}
+#ViewMag{
+  width:800px;
+  height:600px;
+  z-index:20;
+  position:absolute;
+  top:140px;
+  left:100px;
+  overflow:scroll;
+  display:none;
+  border:4px red solid;
+  cursor:move;
+}
+#ViewMag img{
+  width:800px;
+  height:1024px;
+  cursor: move;
+}
+#LeftMag,#RightMag{
+  top:30px;
+  position:relative;
+  width:370px;
+  height:450px;
+  overflow:hidden;
+  text-align:left;
+  float:left;
+}
+#LeftMag {background:url('../images/leftBook.png') no-repeat;}
+#RightMag{background:url('../images/rightBook.png') right top no-repeat;}
+#LeftMag div,#RightMag div{
+  overflow:hidden;
+  width:560px;
+  height:448px;
+  display:block; 
+  position:absolute;
+  top:0px;
+  border-top:1px #999999 solid;
+  border-bottom:1px #999999 solid;
+} 
+#LeftMag div{right:0px;}
+#LeftMag img,#RightMag img{
+  width:100%;
+  height:100%;
+}
+
+
+#config
+{
+
+  display:inline;
+  z-index:0;
+}

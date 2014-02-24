@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name='HandheldFriendly' content='True'>
+<!-- meta name='MobileOptimized' content='320'-->
+<meta name='format-detection' content='telephone=no'>
+<meta name='viewport'
+	content='width=device-width, minimum-scale=1.0, maximum-scale=1.0'>
+<meta http-equiv='cleartype' content='on'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<title>GIS-DEMO</title>
+
+<!-- 發佈到 Android or IOS 只要改這邊 -->
+<script type="text/javascript" charset="utf-8"
+	src="inc/javascript/android/cordova-2.2.0.js"></script>
+
+<script type="text/javascript" charset="utf-8"
+	src="inc/javascript/jquery-1.7.2.min.js"></script>
+<script type="text/javascript"
+	src="inc/javascript/jquery-ui-1.8.21.custom/js/jquery-ui-1.8.21.custom.min.js"></script>
+<link rel="stylesheet"
+	href="inc/javascript/jquery-ui-1.8.21.custom/development-bundle/themes/base/jquery.ui.all.css" />
+	
+<link rel="stylesheet"
+	href="css/style.css" />
+		
+<script type="text/javascript" charset="utf-8"
+	src="inc/javascript/php.default-min.js"></script>
+<script type="text/javascript" charset="utf-8"
+	src="inc/javascript/include.js"></script>
+
+<!-- blockUI Plugin : http://jquery.malsup.com/block/#demos -->
+<script type="text/javascript" charset="utf-8"
+	src="inc/javascript/jquery.blockUI.js"></script>
+	
+<!--  file plugin -->
+<script type="text/javascript" charset="utf-8"
+	src="inc/javascript/filePlugin.js"></script>
+	
+<script type="text/javascript" charset="utf-8"
+	src="inc/javascript/mouse.js"></script>
+	
+<script type="text/javascript" language="javascript">
+	/*canvas函式-Start*/
+	window['canvas'];
+    window['ctx'];
+    window['brush']=0;
+    function reset_canvas()
+    {    		  	       	
+    	var input_width=str_replace('px','',$('#cv')[0].getAttribute('width'));
+	    var input_height=str_replace('px','',$('#cv')[0].getAttribute('height'));    	
+	    window['ctx'].mozImageSmoothingEnabled = false;        
+	    window['ctx'].fillStyle = "rgb(204, 255, 255)";			  
+	    window['ctx'].fillRect(1,1, input_width,input_height);		 
+	    window['ctx'].lineWidth = 5;			 
+	    window['ctx'].strokeStyle="black";		      	 
+    }
+	function DrawBoardPressUp()  
+    {   
+      if(window['brush']==1)
+      {
+    	 window['ctx'].closePath();                 
+      }       
+      window['brush']=0;                                 
+    }  	
+	function DrawBoardPressDown(x,y)  
+    {      	
+       window['brush']=1;
+       window['ctx'].beginPath();        
+       window['ctx'].moveTo(x,y);     
+    }  
+	function DrawBoardPressUp()  
+    {   
+      if(window['brush']==1)
+      {
+    	  window['ctx'].closePath();  
+      }       
+      window['brush']=0;                      
+    }
+	function DrawBoardMove(e)
+	{	  	
+	    var x = e.offsetX, y = e.offsetY;
+	    if(e.hasOwnProperty('layerX')) {
+	      x = e.layerX - e.currentTarget.offsetLeft;
+	      y = e.layerY - e.currentTarget.offsetTop;
+	    }
+		//alert(x);
+	    if(window['brush']==1)
+	    {              
+	    	window['ctx'].lineTo(x,y); 
+	    	window['ctx'].stroke();
+	    	window['ctx'].closePath();
+	    	window['ctx'].beginPath();
+	    	window['ctx'].moveTo(x,y);		     		
+		 }		    		  
+	}
+	function DrawBoardPressUp()  
+    {   
+       if(window['brush']==1)
+       {
+    	   window['ctx'].closePath();  
+       }       
+       window['brush']=0;                                  
+    }       	
+	/*畫板函式-Start*/
+	function c_init()
+	{
+		//初始化畫板大小		
+		$("#cv").width($(window).width()*80/100);
+		$("#cv").height(($(window).height()-70-90));
+		$("#cv")[0].style.width=($(window).width()*80/100)+'px';
+		$("#cv")[0].style.height=($(window).height()-70-90)+'px';
+		$("#cv")[0].width=($(window).width()*80/100);
+		$("#cv")[0].height=($(window).height()-70-90);
+		$("#cv").css({
+			'width':(window['wh']['width']*80/100)+'px',
+			'height':($(window).height()-70-90)+'px',
+			'border':'2px solid #fff',
+			'background-color':'#CCFFFF',
+		});
+		$("#btn_save").css({
+			'width': 70*window['rw']+'px',
+			'height': 70*window['rh']+'px',
+			'background-image':'url(pic/btn_save.png)',
+			'background-size':'100% 100%',
+			'background-repeat':'no-repeat'
+		});
+		$("#btn_reset").css({
+			'width': 70*window['rw']+'px',
+			'height': 70*window['rh']+'px',
+			'background-image':'url(pic/btn_clean.png)',
+			'background-size':'100% 100%',
+			'background-repeat':'no-repeat'
+		});	    	           
+	    window['canvas'] = $('#cv')[0];	        
+	    window['ctx']=window['canvas'].getContext('2d');	 		
+	}
+	/*畫板函式-End*/
+	function Load() {
+		document.addEventListener("deviceready", onDeviceReady, false);
+	}
+	function onDeviceReady() {
+		$(document).ready(function() {
+			
+			//重新定義按下回上頁鍵
+			document.removeEventListener("backbutton", function(e) {
+			}, false);
+			document.addEventListener("backbutton", function(e) {
+				e.preventDefault();
+				if (confirm("你確定要離開系統嗎??") == true) {
+					navigator.app.exitApp();
+					return true;
+				} else {
+					return false;
+				}
+			}, true);
+
+			setTimeout(function() {
+				//首頁必需等待畫面佈署完成再載入比較安全				
+				$("body").show();
+				mouse_init();
+				window['wh'] = new Object();
+				window['wh']['width']=$(window).width();
+				window['wh']['height']=$(window).height();
+				window['rw'] = window['wh']['width'] / 1280; // width 比例
+				window['rh'] = window['wh']['height'] / (800 / (640 / 552)); // height 比例	
+				
+				c_init();
+				reset_canvas();
+				//按下清除的鈕
+				$("#btn_reset").unbind("mouseup");
+				$("#btn_reset").bind("mouseup",function(){
+					reset_canvas();
+				});
+				$("#btn_save").unbind("mouseup");
+				$("#btn_save").bind("mouseup",function(){
+					var filename=sprintf("%s.png",time());									
+					var data = $('#cv')[0].toDataURL();
+					//alert(data);
+					data = str_replace('data:image/png;base64,','',data);
+					file_put_contents_from_base64("/mnt/sdcard/"+filename,data);					
+					alert("Done.../mnt/sdcard/"+filename);
+				});
+				$("#AAAA").bind("mouseup",function(){
+					location.replace("test/index.html");
+				});
+				//畫板操作
+				$("#cv").bind("mouseup",function(event){
+					DrawBoardPressUp();
+				});
+				$("#cv").bind("mousedown",function(event){
+					DrawBoardPressDown(event.layerX ,event.layerX);
+				});
+				$("#cv").bind("mousemove",function(event){
+					DrawBoardMove(event);
+				});
+				$("#cv").bind("mouseout",function(event){
+					DrawBoardPressUp();
+				});
+				
+			}, 1500);
+		});
+	}
+</script>
+</head>
+<body onLoad="Load();" style="display: none;">
+	<center>
+		<h3>
+			簡單的簽名系統-John太神了			
+			<br>
+			按下儲存後，檔案會自動存到/sdcard/13xxxxxx.png
+		</h3>
+		<canvas id="cv" width="500" height="500" style="margin-left:auto;margin-right:auto;"></canvas>
+		<br>		
+		<table border="0" cellpadding="0" cellspacing="0" width="80%">
+			<tr>
+				<td align="center">
+					<div id="btn_save"></div>
+				</div>
+				<td align="center">		
+					<div id="btn_reset"></div>
+				</td>
+			</tr>
+		</table>
+	</center>
+</body>
+</html>
